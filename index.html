@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<!-- saved from url=(0074)file:///C:/Users/Victor%20Pajajoy/Downloads/gemini-code-1794407469804.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto de Investigación: IA Empática en el SENA</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #27ae60;
+            --accent-color: #e67e22;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --text-light: #666;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        /* Contenedor del Esquema */
+        .schema-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            gap: 20px;
+            position: relative;
+        }
+
+        /* Filas del esquema */
+        .row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        /* Tarjetas (Nodos) */
+        .node {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
+            border: 2px solid transparent;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            border-color: var(--secondary-color);
+        }
+
+        .node h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .node p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        /* Estilos específicos por tipo de nodo */
+        .node.main-title { background-color: var(--primary-color); color: white; max-width: 500px; }
+        .node.main-title h3, .node.main-title p { color: white; }
+        
+        .node.objective-general { background-color: #e8f4f8; border-left: 5px solid #2980b9; }
+        .node.objective-general h3 { color: #2980b9; }
+
+        .node.branch { border-top: 4px solid var(--secondary-color); }
+        
+        .node.metodologia { background-color: #fdf2e9; border-color: var(--accent-color); }
+        .node.metodologia h3 { color: var(--accent-color); }
+        
+        .node.resultado { background-color: #e9f7ef; border-color: var(--secondary-color); }
+        .node.resultado h3 { color: var(--secondary-color); }
+        
+        .node.conclusion { background-color: #f4f6f7; border-color: #7f8c8d; }
+        .node.conclusion h3 { color: #7f8c8d; }
+
+        .node.sena { background-color: #fff9e6; border-radius: 50%; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; border: 2px dashed #f1c40f; position: absolute; top: 0; right: 0; }
+        .node.sena h3 { margin: 0; font-size: 1.2rem; }
+
+        /* Tarjeta especial del Gestor de Archivos y Videoconferencia */
+        .node.upload-card, .node.video-card {
+            background-color: #ffffff;
+            border: 2px dashed var(--secondary-color);
+            max-width: 450px;
+            width: 100%;
+            text-align: left;
+            cursor: default;
+        }
+        .node.video-card {
+            border-color: #2980b9;
+        }
+        .node.upload-card:hover, .node.video-card:hover {
+            transform: none;
+            box-shadow: var(--shadow);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .card-header h3 {
+            margin: 0;
+            color: var(--secondary-color);
+            font-size: 0.95rem;
+        }
+        .node.video-card .card-header h3 {
+            color: #2980b9;
+        }
+        .drop-zone {
+            border: 1px dashed #bdc3c7;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            background-color: #fafafa;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .drop-zone:hover {
+            background-color: #f0f9f4;
+            border-color: var(--secondary-color);
+        }
+        .formats-badges {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+        }
+        .badge-pdf { background-color: #e74c3c; }
+        .badge-jpeg { background-color: #9b59b6; }
+        .badge-mp4 { background-color: #e67e22; }
+        .badge-other { background-color: #34495e; }
+
+        .file-list {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid #edf2f7;
+        }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Estilos específicos para la tarjeta de Video / Conferencia */
+        .video-container {
+            width: 100%;
+            height: 150px;
+            background-color: #111;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        #webcamVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* Efecto espejo */
+        }
+        .video-placeholder {
+            color: #aaa;
+            font-size: 0.85rem;
+            text-align: center;
+            position: absolute;
+        }
+        .video-controls {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .btn-control {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .btn-control:hover { background-color: #1f618d; }
+        .btn-control.off { background-color: #c0392b; }
+
+        /* Flechas conectoras */
+        .connector-down {
+            width: 2px;
+            height: 20px;
+            background-color: #bdc3c7;
+            margin: 0 auto;
+        }
+
+        /* Panel lateral (Modal) */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .overlay.active { display: flex; opacity: 1; }
+
+        .modal {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .overlay.active .modal { transform: translateY(0); }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            border: none; background: none;
+        }
+        .close-btn:hover { color: var(--primary-color); }
+
+        .modal-content h2 { color: var(--primary-color); margin-bottom: 15px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 10px; }
+        .modal-content p { margin-bottom: 15px; line-height: 1.6; color: var(--text-color); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .row { flex-direction: column; align-items: center; }
+            .node.sena { position: relative; top: auto; right: auto; margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Esquema de Proyecto de Investigación</h1>
+        <p class="subtitle">Integración Empática de la IA en la Formación de Adultos (SENA)</p>
+        <p style="font-size: 0.9rem; color: #888; margin-top: 10px;">(Haz clic en cada tarjeta para ver el contenido detallado)</p>
+    </header>
+
+    <div class="schema-container">
+        
+        <!-- Nodo SENA (Contexto) -->
+        <div class="node sena" onclick="openModal('sena')">
+            <h3>SENA</h3>
+        </div>
+
+        <!-- Fila 1: Título -->
+        <div class="row">
+            <div class="node main-title" onclick="openModal('titulo')">
+                <h3>Título del Proyecto</h3>
+                <p>Integración empática de la IA en el SENA: Miedos y resistencias de los aprendices adultos.</p>
+            </div>
+        </div>
+        <div class="connector-down"></div>
+
+        <!-- Fila 2: Resumen y Planteamiento -->
+        <div class="row">
+            <div class="node" onclick="openModal('resumen')">
+                <h3>Resumen</h3>
+                <p>Síntesis del problema, objetivos y metodología cualitativa.</p>
+            </div>
+            <div class="node" onclick="openModal('planteamiento')">
+                <h3>Planteamiento del Problema</h3>
+                <p>Brecha entre la IA y el miedo del adulto trabajador.</p>
+            </div>
+        </div>
+        <div class="connector-down"></div>
+
+        <!-- Fila 3: Justificación -->
+        <div class="row">
+            <div class="node" onclick="openModal('justificacion')">
+                <h3>Justificación</h3>
+                <p>Pertinencia social y vacío de conocimiento en la andragogía.</p>
+            </div>
+        </div>
+        <div class="connector-down"></div>
+
+        <!-- Fila 4: Objetivo General -->
+        <div class="row">
+            <div class="node objective-general" onclick="openModal('objetivo_general')">
+                <h3>Objetivo General</h3>
+                <p>Comprender cómo los instructores pueden integrar IA de forma empática.</p>
+            </div>
+        </div>
+        <div class="connector-down"></div>
+
+        <!-- Fila Nueva: Tarjetas de Gestor de Archivos y Videoconferencia en vivo -->
+        <div class="row">
+            <!-- Tarjeta de Subir Archivos -->
+            <div class="node upload-card">
+                <div class="card-header">
+                    <span>📁</span>
+                    <h3>Integrar Archivos al Artefacto</h3>
+                </div>
+                <div class="drop-zone" onclick="document.getElementById('cardFileInput').click()">
+                    <p style="font-size: 0.8rem; color: #555; margin-bottom: 4px;"><strong>Haz clic o arrastra archivos aquí</strong></p>
+                    <div class="formats-badges">
+                        <span class="badge badge-pdf">PDF</span>
+                        <span class="badge badge-jpeg">JPEG</span>
+                        <span class="badge badge-mp4">MP4</span>
+                        <span class="badge badge-other">Otros</span>
+                    </div>
+                    <input type="file" id="cardFileInput" multiple="" style="display: none;" onchange="uploadFiles(this.files)">
+                </div>
+                <div class="file-list" id="cardFileList"></div>
+            </div>
+
+            <!-- Tarjeta de Cámara y Videoconferencia -->
+            <div class="node video-card">
+                <div class="card-header">
+                    <span>📹</span>
+                    <h3>Videoconferencia / Entrevista</h3>
+                </div>
+                <div class="video-container">
+                    <video id="webcamVideo" autoplay="" playsinline="" muted=""></video>
+                    <div class="video-placeholder" id="videoPlaceholder" style="display: block;">Cámara desactivada</div>
+                </div>
+                <div class="video-controls">
+                    <button class="btn-control" id="btnToggleCam" onclick="toggleCamera()">Iniciar Cámara</button>
+                    <button class="btn-control off" id="btnToggleMic" onclick="toggleMic()">Micrófono Mudo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ramificación (Flechas visuales) -->
+        <div style="display: flex; justify-content: space-around; width: 100%; max-width: 900px; margin: 10px 0;">
+            <div style="width: 2px; height: 30px; background: #bdc3c7;"></div>
+            <div style="width: 2px; height: 30px; background: #bdc3c7;"></div>
+            <div style="width: 2px; height: 30px; background: #bdc3c7;"></div>
+        </div>
+
+        <!-- Fila 5: Objetivos Específicos -->
+        <div class="row">
+            <div class="node branch" onclick="openModal('obj_esp_1')">
+                <h3>Objetivo Específico 1</h3>
+                <p>Explorar las experiencias y temores de los aprendices adultos.</p>
+            </div>
+            <div class="node branch" onclick="openModal('obj_esp_2')">
+                <h3>Objetivo Específico 2</h3>
+                <p>Identificar estrategias y dificultades de los instructores.</p>
+            </div>
+            <div class="node branch" onclick="openModal('obj_esp_3')">
+                <h3>Objetivo Específico 3</h3>
+                <p>Proponer lineamientos pedagógicos empáticos.</p>
+            </div>
+        </div>
+
+        <!-- Conectores hacia Metodologías -->
+        <div style="display: flex; justify-content: space-around; width: 100%; max-width: 900px; margin: 10px 0;">
+            <div style="width: 2px; height: 20px; background: #bdc3c7;"></div>
+            <div style="width: 2px; height: 20px; background: #bdc3c7;"></div>
+            <div style="width: 2px; height: 20px; background: #bdc3c7;"></div>
+        </div>
+
+        <!-- Fila 6: Metodologías -->
+        <div class="row">
+            <div class="node metodologia" onclick="openModal('met_1')">
+                <h3>Metodología 1</h3>
+                <p>Grupos focales con aprendices adultos.</p>
+            </div>
+            <div class="node metodologia" onclick="openModal('met_2')">
+                <h3>Metodología 2</h3>
+                <p>Entrevistas en profundidad a instructores.</p>
+            </div>
+            <div class="node metodologia" onclick="openModal('met_3')">
+                <h3>Metodología 3</h3>
+                <p>Análisis temático y codificación de datos.</p>
+            </div>
+        </div>
+
+        <!-- Conectores hacia Resultados -->
+        <div style="display: flex; justify-content: space-around; width: 100%; max-width: 900px; margin: 10px 0;">
+            <div style="width: 2px; height: 20px; background: #bdc3c7;"></div>
+            <div style="width: 2px; height: 20px; background: #bdc3c7;"></div>
+            <div style="width: 2px; height: 20px; background: #bdc3c7;"></div>
+        </div>
+
+        <!-- Fila 7: Resultados -->
+        <div class="row">
+            <div class="node resultado" onclick="openModal('res_1')">
+                <h3>Resultado 1</h3>
+                <p>Identificación de barreras emocionales (miedo).</p>
+            </div>
+            <div class="node resultado" onclick="openModal('res_2')">
+                <h3>Resultado 2</h3>
+                <p>Mapeo de prácticas docentes y puntos ciegos.</p>
+            </div>
+            <div class="node resultado" onclick="openModal('res_3')">
+                <h3>Resultado 3</h3>
+                <p>Documento de recomendaciones prácticas.</p>
+            </div>
+        </div>
+
+        <!-- Conectores hacia Conclusiones -->
+        <div style="display: flex; justify-content: space-around; width: 100%; max-width: 900px; margin: 10px 0;">
+            <div style="width: 2px; height: 20px; background: #bdc3c7;"></div>
+            <div style="width: 2px; height: 20px; background: #bdc3c7;"></div>
+            <div style="width: 2px; height: 20px; background: #bdc3c7;"></div>
+        </div>
+
+        <!-- Fila 8: Conclusiones -->
+        <div class="row" style="margin-bottom: 40px;">
+            <div class="node conclusion" onclick="openModal('con_1')">
+                <h3>Conclusión 1</h3>
+                <p>Los temores se deben a falta de tiempo y frustración.</p>
+            </div>
+            <div class="node conclusion" onclick="openModal('con_2')">
+                <h3>Conclusión 2</h3>
+                <p>Falta de herramientas didácticas para la empatía.</p>
+            </div>
+            <div class="node conclusion" onclick="openModal('con_3')">
+                <h3>Conclusión 3</h3>
+                <p>La empatía docente es el puente para la inclusión.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal / Panel Lateral -->
+    <div class="overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal(event)">×</button>
+            <div class="modal-content" id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const contentData = {
+            titulo: {
+                title: "Título del Proyecto",
+                body: "<p><strong>Integración empática de la Inteligencia Artificial en el SENA: Un estudio cualitativo sobre la inclusión de aprendices adultos con poco tiempo.</strong></p><p>Este título refleja el núcleo de la investigación: la relación entre la IA, la empatía del instructor y la inclusión del adulto trabajador.</p>"
+            },
+            resumen: {
+                title: "Resumen del Proyecto",
+                body: "<p>El presente proyecto busca comprender cómo los instructores del SENA pueden integrar herramientas interactivas de IA de forma empática para mitigar los temores de los aprendices adultos. Se enmarca en un enfoque cualitativo fenomenológico, utilizando grupos focales y entrevistas a profundidad. Se espera generar lineamientos pedagógicos que fomenten la inclusión digital y eviten la deserción en el programa de Tecnología en Procesamiento de Alimentos.</p>"
+            },
+            planteamiento: {
+                title: "Planteamiento del Problema",
+                body: "<p><strong>Contexto:</strong> En el SENA, los instructores no integran la IA porque no saben cómo adaptarla a adultos que trabajan.</p><p><strong>Impacto:</strong> Los adultos se quedan atrás, no entregan proyectos a tiempo, se desmotivan y pierden oportunidades laborales.</p><p><strong>Vacío:</strong> Los estudios se centran en la técnica y no en el miedo o la emoción del adulto. Se requiere una mirada desde la empatía docente.</p>"
+            },
+            justificacion: {
+                title: "Justificación",
+                body: "<p>La investigación es pertinente porque responde a una necesidad real de la institución más grande de formación técnica en Colombia. Aporta al conocimiento al llenar el vacío existente sobre la inteligencia emocional del instructor en la andragogía y la IA. Prácticamente, ofrecerá un marco de referencia para aplicar la IA sin generar rechazo, fomentando la equidad educativa.</p>"
+            },
+            objetivo_general: {
+                title: "Objetivo General",
+                body: "<p><strong>Comprender</strong> cómo los instructores del SENA pueden integrar herramientas interactivas de Inteligencia Artificial (IA) de forma empática, para mitigar los temores y fomentar la inclusión de los aprendices adultos con poco tiempo en el programa de Tecnología en Procesamiento y Conservación de Alimentos.</p>"
+            },
+            obj_esp_1: {
+                title: "Objetivo Específico 1",
+                body: "<p><strong>Explorar</strong> las experiencias, temores y percepciones que tienen los aprendices adultos sobre el uso de herramientas interactivas de IA en su proceso formativo.</p>"
+            },
+            obj_esp_2: {
+                title: "Objetivo Específico 2",
+                body: "<p><strong>Identificar</strong> las estrategias pedagógicas y las dificultades que enfrentan actualmente los instructores del SENA al intentar integrar la IA con población adulta trabajadora.</p>"
+            },
+            obj_esp_3: {
+                title: "Objetivo Específico 3",
+                body: "<p><strong>Proponer</strong>, a partir de las voces de los participantes, lineamientos o recomendaciones pedagógicas para que los instructores integren la IA de manera más empática y adaptada a las realidades de tiempo de los aprendices adultos.</p>"
+            },
+            met_1: {
+                title: "Metodología 1 (Para Obj. Esp. 1)",
+                body: "<p><strong>Técnica:</strong> Grupos Focales.</p><p><strong>Participantes:</strong> Aprendices adultos (mayores de 25 años, trabajadores).</p><p><strong>Instrumento:</strong> Guion de preguntas semiestructuradas y grabadora de voz. Se busca explorar de manera colectiva sus temores y resistencias frente a la IA.</p>"
+            },
+            met_2: {
+                title: "Metodología 2 (Para Obj. Esp. 2)",
+                body: "<p><strong>Técnica:</strong> Entrevistas en Profundidad.</p><p><strong>Participantes:</strong> Instructores del programa.</p><p><strong>Instrumento:</strong> Guion de entrevista semiestructurado, diario de campo. Se busca indagar sobre sus estrategias, dificultades y percepción sobre la empatía al integrar la IA.</p>"
+            },
+            met_3: {
+                title: "Metodología 3 (Para Obj. Esp. 3)",
+                body: "<p><strong>Técnica:</strong> Análisis Temático y Codificación Abierta.</p><p><strong>Proceso:</strong> Transcripción literal de audios, asignación de códigos y agrupación en categorías emergentes (Ej: Categorías sobre el miedo, Categorías sobre la empatía, Barreras de tiempo).</p>"
+            },
+            res_1: {
+                title: "Resultado Esperado 1",
+                body: "<p>Identificación y descripción profunda de las principales barreras emocionales (miedo, frustración, ansiedad) que enfrentan los aprendices adultos al usar IA.</p>"
+            },
+            res_2: {
+                title: "Resultado Esperado 2",
+                body: "<p>Mapeo de las prácticas actuales de los instructores, revelando sus puntos ciegos frente a la dimensión emocional del aprendizaje adulto mediado por tecnología.</p>"
+            },
+            res_3: {
+                title: "Resultado Esperado 3",
+                body: "<p>Un documento consolidado con recomendaciones y estrategias pedagógicas empáticas, diseñado específicamente para los instructores del SENA.</p>"
+            },
+            con_1: {
+                title: "Conclusión Esperada 1",
+                body: "<p>Los temores de los adultos hacia la IA no son por falta de capacidad, sino que se originan en la falta de tiempo y en experiencias previas frustrantes con la tecnología.</p>"
+            },
+            con_2: {
+                title: "Conclusión Esperada 2",
+                body: "<p>Los instructores carecen de las herramientas didácticas y socioemocionales necesarias para manejar la resistencia al cambio y la ansiedad tecnológica de sus estudiantes.</p>"
+            },
+            con_3: {
+                title: "Conclusión Esperada 3",
+                body: "<p>La empatía del docente es el puente fundamental para que la IA deje de ser una barrera de exclusión y se convierta en una herramienta verdaderamente inclusiva en la andragogía.</p>"
+            },
+            sena: {
+                title: "Contexto Institucional: SENA",
+                body: "<p>El proyecto se desarrolla en el <strong>Servicio Nacional de Aprendizaje (SENA)</strong>, específicamente en el programa de <strong>Tecnología en Procesamiento y Conservación de Alimentos</strong>.</p><p>Este entorno es crucial porque la institución atiende a una gran población de adultos que trabajan y requieren metodologías flexibles y empáticas para no desertar.</p>"
+            }
+        };
+
+        const overlay = document.getElementById('modalOverlay');
+        const modalContent = document.getElementById('modalContent');
+
+        function openModal(key) {
+            const data = contentData[key];
+            if (data) {
+                modalContent.innerHTML = `<h2>${data.title}</h2>${data.body}`;
+                overlay.classList.add('active');
+            }
+        }
+
+        function closeModal(event) {
+            if (event.target.classList.contains('overlay') || event.target.classList.contains('close-btn')) {
+                overlay.classList.remove('active');
+            }
+        }
+
+        // Gestor de Archivos de la tarjeta
+        let attachedFiles = [];
+
+        function uploadFiles(files) {
+            for (let i = 0; i < files.length; i++) {
+                attachedFiles.push(files[i].name);
+            }
+            renderCardFileList();
+        }
+
+        function removeCardFile(index) {
+            attachedFiles.splice(index, 1);
+            renderCardFileList();
+        }
+
+        function renderCardFileList() {
+            const container = document.getElementById('cardFileList');
+            container.innerHTML = '';
+            attachedFiles.forEach((fileName, index) => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.innerHTML = `
+                    <span>📄 ${fileName}</span>
+                    <button class="remove-btn" onclick="removeCardFile(${index})">✕</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Lógica de Cámara y Micrófono
+        let mediaStream = null;
+        let isCamActive = false;
+        let isMicMuted = true;
+
+        async function toggleCamera() {
+            const videoElem = document.getElementById('webcamVideo');
+            const placeholder = document.getElementById('videoPlaceholder');
+            const btnCam = document.getElementById('btnToggleCam');
+
+            if (!isCamActive) {
+                try {
+                    mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    videoElem.srcObject = mediaStream;
+                    placeholder.style.display = 'none';
+                    isCamActive = true;
+                    isMicMuted = false;
+                    
+                    btnCam.textContent = "Apagar Cámara";
+                    btnCam.classList.add('off');
+                    
+                    const btnMic = document.getElementById('btnToggleMic');
+                    btnMic.textContent = "Micrófono Activo";
+                    btnMic.classList.remove('off');
+                } catch (err) {
+                    alert("No se pudo acceder a la cámara o micrófono. Verifica los permisos del navegador.");
+                }
+            } else {
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                }
+                videoElem.srcObject = null;
+                placeholder.style.display = 'block';
+                isCamActive = false;
+                
+                btnCam.textContent = "Iniciar Cámara";
+                btnCam.classList.remove('off');
+                
+                const btnMic = document.getElementById('btnToggleMic');
+                btnMic.textContent = "Micrófono Mudo";
+                btnMic.classList.add('off');
+            }
+        }
+
+        function toggleMic() {
+            if (!mediaStream) {
+                alert("Primero debes iniciar la cámara y el micrófono.");
+                return;
+            }
+            const audioTrack = mediaStream.getAudioTracks()[0];
+            const btnMic = document.getElementById('btnToggleMic');
+
+            if (audioTrack) {
+                audioTrack.enabled = !audioTrack.enabled;
+                isMicMuted = !audioTrack.enabled;
+
+                if (isMicMuted) {
+                    btnMic.textContent = "Micrófono Mudo";
+                    btnMic.classList.add('off');
+                } else {
+                    btnMic.textContent = "Micrófono Activo";
+                    btnMic.classList.remove('off');
+                }
+            }
+        }
+    </script>
+
+</body></html>
